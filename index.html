@@ -1,0 +1,80 @@
+<!:DOCTYPE html>
+<html ng-app="galery">
+	<head>
+		<title>Selecto Task</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+	</head>
+<body>
+	<div class="container">
+		<div class="block">
+			<h3>Select</h3>
+			<p id="valid"></p><span id="current"></span><span id="next">next</span>
+			<p id="text">It has a fantastic feature-set and at least 5 developers I’ve spoken to this week alone swear by it for their own synchronized cross-device testing.</p>
+			<input type="text" id="input" onkeypress="onKey">
+		</div>
+	</div>
+
+	<script>
+		var input = document.getElementById('input'),
+			valid = document.getElementById('valid'),
+			current = document.getElementById('current'),
+			next = document.getElementById('next'),
+			text = document.getElementById('text'),
+
+			words = text.innerHTML.split(' '),
+			currentIndex = -1,
+			length = 0;
+		
+		input.addEventListener("keypress", onKey);
+		resetState();
+
+		function onKey(event){
+   			if (event.key == ' ' && !(input.value.length))
+	    		clearInput();
+	   		else{
+	    		editSpan(event.key);
+	  		}
+	  	}
+		function editSpan(currentKey){
+			length 	= input.value.length+1;
+
+			if (!checkWord(currentKey, length)){
+				current.classList.add('invalid');
+				input.classList.add('invalid');
+			}
+			else{
+				current.classList.remove('invalid');
+				input.classList.remove('invalid');
+			}
+
+			if (words[currentIndex].length >= length){
+				current.innerHTML = words[currentIndex].slice(0,length);
+				next.innerHTML = words[currentIndex].slice(length,words[currentIndex].length);
+			}
+
+			if (checkWord(currentKey, length) && length == words[currentIndex].length){
+				resetState();
+			}
+		}
+
+		function resetState(){
+			valid.innerHTML += (current.innerHTML + ' ');
+			current.innerHTML = '';
+			clearInput();
+			text.innerHTML = text.innerHTML.slice(words[++currentIndex].length+1);
+			next.innerHTML = words[currentIndex];
+
+		}
+		function clearInput(){
+			setTimeout(function(){
+				input.value = '';
+			},0);
+		}
+		function checkWord(currentKey, length){
+			return (input.value+currentKey) == words[currentIndex].slice(0,length);
+		}
+	</script>
+</body>
+
